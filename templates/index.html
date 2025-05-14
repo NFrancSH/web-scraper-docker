@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraping Interactivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        #form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #resultados {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #iframe-container {
+            margin: 20px 0;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #iframe-preview {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+        #seguridad {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .puntuacion {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .seguridad-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .seguridad-list li {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        .seguridad-list li:before {
+            content: "•";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .advertencia {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="form-container">
+        <h1>🔍 Web Scraping + Seguridad</h1>
+        <form method="POST">
+            <input type="text" id="url" name="url" placeholder="https://www.ejemplo.com" required>
+            <button type="submit">Analizar</button>
+        </form>
+    </div>
+
+    {% if resultados or url %}
+    <div id="resultados">
+        {% if resultados %}
+            <h2>📌 Títulos encontrados ({{ resultados|length }}):</h2>
+            <ul>
+                {% for item in resultados %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if url %}
+            <h2>🌐 Vista interactiva:</h2>
+            <div id="iframe-container">
+                <iframe 
+                    id="iframe-preview" 
+                    src="{{ url }}" 
+                    sandbox="allow-same-origin allow-scripts allow-forms"
+                    loading="lazy"
+                ></iframe>
+            </div>
+        {% endif %}
+
+        {% if seguridad %}
+            <div id="seguridad">
+                <h2>🔒 Análisis de Seguridad</h2>
+                <div style="display: flex; align-items: center;">
+                    <div class="puntuacion" style="background: 
+                        {% if seguridad.puntuacion >= 70 %}#2ecc71
+                        {% elif seguridad.puntuacion >= 40 %}#f39c12
+                        {% else %}#e74c3c{% endif %};">
+                        {{ seguridad.puntuacion }}
+                    </div>
+                    <ul class="seguridad-list">
+                        <li>HTTPS: {% if seguridad.ssl %}✅ Sí (40 pts){% else %}❌ No (-40 pts){% endif %}</li>
+                        <li>Cookies: {% if seguridad.cookies %}⚠️ Sí (20 pts){% else %}✅ No(10 pts){% endif %}</li>
+                        <li>Formularios: {% if seguridad.formularios %}⚠️ Sí (-5 pts){% else %}✅ No (10 pts){% endif %}</li>
+                        <li>Scripts externos: {% if seguridad.scripts_externos %}❌ Sí (-15 pts){% else %}✅ No (20 pts){% endif %}</li>
+                    </ul>
+                </div>
+                <p class="advertencia">
+                    <strong>Nota:</strong> Esta evaluación es básica. Para un análisis profesional, considere herramientas como <a href="https://observatory.mozilla.org" target="_blank">Mozilla Observatory</a>.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</body>
+</html>

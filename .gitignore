@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Docker
+chromedriver.exe 
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs y datos
+*.log
+*.sqlite

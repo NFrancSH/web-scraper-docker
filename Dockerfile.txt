@@ -1,0 +1,30 @@
+# Usa una imagen base con Python y Chrome
+FROM python:3.9-slim
+
+# Instala dependencias del sistema + Chrome
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    wget \
+    unzip \
+    google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
+
+# Descarga y configura chromedriver (compatible con la versión de Chrome instalada)
+RUN LATEST_CHROME_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
+    wget -q https://chromedriver.storage.googleapis.com/$LATEST_CHROME_VERSION/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip -d /usr/bin/ && \
+    rm chromedriver_linux64.zip && \
+    chmod +x /usr/bin/chromedriver
+
+# Configura el entorno
+WORKDIR /app
+COPY . .
+
+# Instala dependencias de Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Puerto expuesto
+EXPOSE 5000
+
+# Comando de inicio
+CMD ["python", "app.py"]
