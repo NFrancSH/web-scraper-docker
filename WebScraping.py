@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+import chromedriver_autoinstaller
+
 from urllib.parse import urlparse
 import ssl
 import OpenSSL
@@ -32,11 +33,14 @@ def analizar_seguridad(url):
 
         # Configurar Selenium
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        driver = webdriver.Chrome(service=Service("chromedriver.exe"), options=chrome_options)
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chromedriver_autoinstaller.install()
+        driver = webdriver.Chrome(options=chrome_options)
         driver.get(url)
         time.sleep(2)
-
         # Cookies
         cookies = driver.get_cookies()
         if cookies:
@@ -83,8 +87,13 @@ def index():
 
         # Scraping básico de títulos
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        driver = webdriver.Chrome(service=Service("chromedriver.exe"), options=chrome_options)
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chromedriver_autoinstaller.install()
+        driver = webdriver.Chrome(options=chrome_options)
+
         
         try:
             driver.get(url_ingresada)
@@ -104,4 +113,4 @@ def index():
     )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=5000,debug=True)
