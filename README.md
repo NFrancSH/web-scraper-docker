@@ -6,7 +6,7 @@ Este proyecto es una aplicación Flask que analiza sitios web usando Selenium y 
 
 ## 🚀 Características
 
-- Scraping básico de encabezados <h1>, <h2>, <h3>
+- Scraping básico de encabezados
 - Análisis de seguridad:
   - SSL habilitado
   - Cookies detectadas
